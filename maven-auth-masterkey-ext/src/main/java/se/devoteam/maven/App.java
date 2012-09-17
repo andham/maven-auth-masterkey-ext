@@ -5,6 +5,11 @@ package se.devoteam.maven;
  *
  */
 public class App {
+	
+	/**
+	 * Usage: java App
+	 * @param args not in use
+	 */
     public static void main( String[] args ) {
         System.out.println( "Hello World!" );
     }
