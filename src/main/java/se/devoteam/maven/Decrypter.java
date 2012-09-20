@@ -118,6 +118,7 @@ public class Decrypter implements SettingsDecrypter {
 				}
 				return securityDispatcher.decrypt(str);
 			} else {
+				//TODO: System.getProperty(SYSTEM_PROPERTY_SEC_LOCATION) not set - how to deal with this
 				if (str.charAt(0) == '{' && str.charAt(str.length() - 1) == '}') {
 					throw new SecDispatcherException("Unable to decrypt password. The " + SYSTEM_PROPERTY_SEC_LOCATION + " must be set.");
 				}
@@ -167,6 +168,7 @@ public class Decrypter implements SettingsDecrypter {
 	 * Remove this class when the plexus container is in place.
 	 */
 	public class TmpSecDispatcher extends DefaultSecDispatcher {
+		@SuppressWarnings("rawtypes")
 		public TmpSecDispatcher() {
 	    	try {
 				super._cipher = new DefaultPlexusCipher();
