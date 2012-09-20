@@ -1,5 +1,5 @@
 /*
- * se.devoteam.mave.Decrypter
+ * se.devoteam.maven.Decrypter
  * 
  * Version:  1.0 
  *
@@ -38,12 +38,16 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 @Component( role = SettingsDecrypter.class ) //TODO: add this to components.xml
 public class Decrypter implements SettingsDecrypter {
 	
-	//TODO: let plexus handle this (figure out a way to create a test case with a plexus container)
-	@Requirement( hint = "maven" )
-    private SecDispatcher securityDispatcher;
-	
 	protected static final String SYSTEM_PROPERTY_SEC_LOCATION = "settings.security";
 	
+	//TODO: let plexus container handle this
+	@Requirement
+	private SecretKey key = new MavenExtSecretKey();
+	
+	//TODO: let plexus handle this 
+	@Requirement( hint = "maven" )
+    private SecDispatcher securityDispatcher = new TmpSecDispatcher();
+
 	/**
 	 * Decrypt supplied passwords.
 	 * @param request the passwords to decrypt
@@ -110,12 +114,6 @@ public class Decrypter implements SettingsDecrypter {
 		if (str != null) {
 	
 			if (System.getProperty(SYSTEM_PROPERTY_SEC_LOCATION) != null) {
-				//securityDispatcher.decrypt(str);(
-				if (securityDispatcher == null) {
-					//TODO: let plexus handle this (figure out a way to create a test case with a plexus container)
-					securityDispatcher = new TmpSecDispatcher();
-					
-				}
 				return securityDispatcher.decrypt(str);
 			} else {
 				//TODO: System.getProperty(SYSTEM_PROPERTY_SEC_LOCATION) not set - how to deal with this
