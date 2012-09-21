@@ -17,7 +17,7 @@ import java.io.Serializable;
  */
 public interface SecretKey extends Serializable {
 	
-	public static final String SYSTEM_PROPERTY_SEC_LOCATION = "settings.security";
-	
 	public boolean isSet();
+	
+	public String getKey();
 }

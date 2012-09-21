@@ -10,7 +10,6 @@
 package se.devoteam.maven;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.maven.settings.Proxy;
@@ -23,9 +22,6 @@ import org.apache.maven.settings.crypto.SettingsDecryptionRequest;
 import org.apache.maven.settings.crypto.SettingsDecryptionResult;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.sonatype.plexus.components.cipher.DefaultPlexusCipher;
-import org.sonatype.plexus.components.cipher.PlexusCipherException;
-import org.sonatype.plexus.components.sec.dispatcher.DefaultSecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
@@ -38,7 +34,7 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 @Component( role = SettingsDecrypter.class ) //TODO: add this to components.xml
 public class Decrypter implements SettingsDecrypter {
 	
-	protected static final String SYSTEM_PROPERTY_SEC_LOCATION = "settings.security";
+	//TODO: consider making a org.sonatype.plexus.components.sec.dispatcher.PasswordDecryptor class
 	
 	//TODO: let plexus container handle this
 	@Requirement
@@ -46,7 +42,7 @@ public class Decrypter implements SettingsDecrypter {
 	
 	//TODO: let plexus handle this 
 	@Requirement( hint = "maven" )
-    private SecDispatcher securityDispatcher = new TmpSecDispatcher();
+    private SecDispatcher securityDispatcher = new ExtSecDispatcher();
 
 	/**
 	 * Decrypt supplied passwords.
@@ -72,12 +68,10 @@ public class Decrypter implements SettingsDecrypter {
 		}
 		
 		for (Proxy clonedProxy : clonedProxies) {
-            try
-            {
+            try {
             	clonedProxy.setPassword( decrypt( clonedProxy.getPassword() ) );
             }
-            catch ( SecDispatcherException e )
-            {
+            catch ( SecDispatcherException e ) {
                 problems.add( new DefaultSettingsProblem( "Failed to decrypt password for proxy " + clonedProxy.getId()
                     + ": " + e.getMessage(), Severity.ERROR, "proxy: " + clonedProxy.getId(), -1, -1, e ) );
             }
@@ -112,18 +106,8 @@ public class Decrypter implements SettingsDecrypter {
 	private String decrypt(final String str) throws SecDispatcherException {
 		
 		if (str != null) {
-	
-			if (System.getProperty(SYSTEM_PROPERTY_SEC_LOCATION) != null) {
-				return securityDispatcher.decrypt(str);
-			} else {
-				//TODO: System.getProperty(SYSTEM_PROPERTY_SEC_LOCATION) not set - how to deal with this
-				if (str.charAt(0) == '{' && str.charAt(str.length() - 1) == '}') {
-					throw new SecDispatcherException("Unable to decrypt password. The " + SYSTEM_PROPERTY_SEC_LOCATION + " must be set.");
-				}
-				//not an encrypted password
-			}
+			return securityDispatcher.decrypt(str);
 		}
-		
 		return str;
 	}
 	
@@ -159,23 +143,6 @@ public class Decrypter implements SettingsDecrypter {
 			}
 			
 		};
-	}
-	
-	/**
-	 * This is a temporary solution to make the tests work.
-	 * Remove this class when the plexus container is in place.
-	 */
-	public class TmpSecDispatcher extends DefaultSecDispatcher {
-		@SuppressWarnings("rawtypes")
-		public TmpSecDispatcher() {
-	    	try {
-				super._cipher = new DefaultPlexusCipher();
-				super._decryptors = new HashMap();
-			} catch (PlexusCipherException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 
 }

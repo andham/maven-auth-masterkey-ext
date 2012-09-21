@@ -10,8 +10,6 @@ package se.devoteam.maven;
  * Copyright: 
  */
 
-import java.io.File;
-//import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -90,44 +88,31 @@ public class DecrypterTest {
 	
 	/**
 	 * Test {@link se.devoteam.maven.Decrypter#decrypt(SettingsDecryptionRequest)}.
-	 * <p/>The test provokes an error by not setting the 
-	 * {@link #Decrypter.SYSTEM_PROPERTY_SEC_LOCATION) property.
+	 * <p/>The test provokes an error by trying to decrypt a password not encrypted with the master key
 	 * 
-	 * The test is successful if the result object has one problem attached to it
-	 * that declares it failed to decrypt the password for server {@link #getOneServerPasswordEncrypted()}
+	 * The test is successful if the result object has one problem attached to it.
 	 */
 	@Test
 	public void testDecryptPasswordProblem() {
 		SettingsDecrypter decrypter = new Decrypter();
-		
-		System.clearProperty(Decrypter.SYSTEM_PROPERTY_SEC_LOCATION);
-
-		SettingsDecryptionRequest req = getOneServerPasswordEncrypted();
+		SettingsDecryptionRequest req = getErrorPassword();
 		SettingsDecryptionResult result = decrypter.decrypt(req);
 		List<SettingsProblem> problems = result.getProblems();
 		Assert.assertTrue(problems.size() == 1);
-		Assert.assertTrue(problems.get(0).getMessage().startsWith("Failed to decrypt password for server " + req.getServers().get(0).getId()));
-
-		
 	}
 	
 	/**
 	 * Test {@link se.devoteam.maven.Decrypter#decrypt(SettingsDecryptionRequest)}.
-	 * <p/>The test creates a temporary file formatted as the <code>settings-security.xml</code>
-	 * It retrieves the content of the file from the test properties.
+	 * <p/>The test is successful if it can decrypt the password found in the <code>test.settings.properties</code> file.
 	 * 
-	 * <p/>The temporary file is stored in the <code>test.tmp.dir</code> directory.
-	 * The file name pattern is m<i>System.currentTimeMillis()</i>.tmp
-	 * 
-	 * @see #createContent()
-	 * @see #createTmpFile(String, String)
 	 * @see #getOneServerPasswordEncrypted()
 	 */
 	@Test
-	public void testDecryptPasswordTmpFile() {
+	public void testDecryptPassword() {
 		
 		SettingsDecrypter decrypter = new Decrypter();
 		SettingsDecryptionResult result = decrypter.decrypt(getOneServerPasswordEncrypted());
+		Assert.assertTrue(result.getProblems().isEmpty());
 		Assert.assertFalse(result.getServer().getPassword().startsWith(settings.getProperty("encryption.start")));
 		Assert.assertFalse(result.getServer().getPassword().endsWith(settings.getProperty("encryption.end")));
 		Assert.assertTrue(result.getServer().getPassword().equals(settings.getProperty("password.plain.text")));	
@@ -139,11 +124,62 @@ public class DecrypterTest {
 	 * The test is successful if the decrypter instance ignores the empty server object.
 	 */
 	@Test
-	public void testPwdIsNull() {
+	public void testPasswordIsNull() {
 		SettingsDecrypter decrypter = new Decrypter();
 		SettingsDecryptionResult result = decrypter.decrypt(getServerPasswordNotSetRequest());
+		Assert.assertTrue(result.getProblems().isEmpty());
 		Assert.assertNull(result.getServer().getPassword());
 		
+	}
+
+	/**
+	 * Creates a new <code>SettingsDecryptionRequest</code> instance that has one server instance. 
+	 * The Server instance where the password is not possible to decrypt.
+	 * 
+	 * @return a new <code>SettingsDecryptionRequest</code> instance that has one server and no proxies
+	 * Note that the methods <code>setProxies(List)</code> and <code>setServers(List)</code>
+	 * throws <code>UnsupportedOperationException</code>.
+	 * 
+	 */
+	private static SettingsDecryptionRequest getErrorPassword() {
+		//error.password
+		return new SettingsDecryptionRequest() {
+			
+			@SuppressWarnings("unchecked")
+			public List<Proxy> getProxies() {
+				return Collections.EMPTY_LIST;
+			}
+
+			public List<Server> getServers() {
+				return getOneServerEncryptedPwd();
+			}
+
+			/**
+			 * Not supported. The proxy list is empty.
+			 */
+			public SettingsDecryptionRequest setProxies(List<Proxy> arg0) {
+				throw new UnsupportedOperationException();
+			}
+
+			/**
+			 * Not supported. 
+			 */
+			public SettingsDecryptionRequest setServers(List<Server> arg0) {
+				throw new UnsupportedOperationException();
+			}
+			
+
+			private List<Server> getOneServerEncryptedPwd() {
+				final List<Server> servers = new ArrayList<Server>(1);
+				Server s = new Server();
+				s.setId(settings.getProperty("org.apache.maven.settings.Server.id"));
+				s.setUsername(settings.getProperty("org.apache.maven.settings.Server.username"));
+				s.setPassword(settings.getProperty("error.password"));
+				servers.add(s);
+				return servers;
+			}
+			
+		};
 	}
 	
 	/**
@@ -154,7 +190,6 @@ public class DecrypterTest {
 	 * Note that the methods <code>setProxies(List)</code> and <code>setServers(List)</code>
 	 * throws <code>UnsupportedOperationException</code>.
 	 * 
-	 * @see #createContent()
 	 */
 	private static SettingsDecryptionRequest getOneServerPasswordEncrypted() {
 		return new SettingsDecryptionRequest() {
