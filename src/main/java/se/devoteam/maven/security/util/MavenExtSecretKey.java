@@ -1,7 +1,5 @@
-package se.devoteam.maven;
-
 /*
- * se.devoteam.maven.MavenExtSecretKey
+ * se.devoteam.maven.security.util.MavenExtSecretKey
  * 
  * Version:  1.0 
  *
@@ -9,11 +7,14 @@ package se.devoteam.maven;
  * 
  * Copyright: 
  */
+package se.devoteam.maven.security.util;
 
 
 import java.io.IOException;
 
 import org.codehaus.plexus.component.annotations.Component;
+
+import se.devoteam.maven.security.SecretKey;
 
 
 /**
@@ -22,7 +23,7 @@ import org.codehaus.plexus.component.annotations.Component;
  * @author Karin Karlsson
  *
  */
-@Component(role = SecretKey.class) 
+@Component(role = SecretKey.class, hint = "tmpKey") 
 public class MavenExtSecretKey implements SecretKey {
 
 	private static final long serialVersionUID = 1L;

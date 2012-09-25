@@ -1,11 +1,21 @@
-package se.devoteam.maven;
+/*
+ * se.devoteam.maven.security.util.KeyReader
+ * 
+ * Version:  1.0 
+ *
+ * Date:     2012-09-20
+ * 
+ * Copyright: 
+ */
+package se.devoteam.maven.security.util;
+
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Temporary class. Change to card, cert....??
- * @author Karin
+ * @author Karin Karlsson
  */
 class KeyReader {
 	

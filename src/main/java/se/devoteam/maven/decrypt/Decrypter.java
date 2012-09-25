@@ -7,7 +7,7 @@
  * 
  * Copyright: 
  */
-package se.devoteam.maven;
+package se.devoteam.maven.decrypt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,10 @@ import org.apache.maven.settings.crypto.SettingsDecryptionRequest;
 import org.apache.maven.settings.crypto.SettingsDecryptionResult;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.sonatype.plexus.components.cipher.PlexusCipherException;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
+import org.sonatype.plexus.components.sec.dispatcher.model.SettingsSecurity;
 
 /**
  * 
@@ -31,18 +33,17 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
  * @see #decrypt(SettingsDecryptionRequest)
  *
  */
-@Component( role = SettingsDecrypter.class ) //TODO: add this to components.xml
+@Component( role = SettingsDecrypter.class, hint = "devoteamDecrypt")
 public class Decrypter implements SettingsDecrypter {
+
+	//TODO: loggning
 	
-	//TODO: consider making a org.sonatype.plexus.components.sec.dispatcher.PasswordDecryptor class
+	@Requirement( hint = "devoteamSecDisp" )
+    private SecDispatcher securityDispatcher;
 	
-	//TODO: let plexus container handle this
-	@Requirement
-	private SecretKey key = new MavenExtSecretKey();
-	
-	//TODO: let plexus handle this 
-	@Requirement( hint = "maven" )
-    private SecDispatcher securityDispatcher = new ExtSecDispatcher();
+	public Decrypter() {
+
+	}
 
 	/**
 	 * Decrypt supplied passwords.
@@ -110,7 +111,7 @@ public class Decrypter implements SettingsDecrypter {
 		}
 		return str;
 	}
-	
+		
 	
 	/**
 	 * Creates a new <code>SettingsDecryptionResult</code> instance.

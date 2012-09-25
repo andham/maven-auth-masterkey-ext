@@ -1,5 +1,3 @@
-package se.devoteam.maven;
-
 /*
  * se.devoteam.maven.SecretKey
  * 
@@ -9,7 +7,10 @@ package se.devoteam.maven;
  * 
  * Copyright: 
  */
+package se.devoteam.maven.security;
+
 import java.io.Serializable;
+
 
 /**
  * 
@@ -17,7 +18,14 @@ import java.io.Serializable;
  */
 public interface SecretKey extends Serializable {
 	
+	/**
+	 * Checks if the secret key has been set or not.
+	 * @return true if it is set, false otherwise
+	 */
 	public boolean isSet();
 	
+	/**
+	 * @return an encrypted the secret key
+	 */
 	public String getKey();
 }
