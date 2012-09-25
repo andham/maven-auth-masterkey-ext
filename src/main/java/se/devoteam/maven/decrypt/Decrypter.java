@@ -38,11 +38,13 @@ public class Decrypter implements SettingsDecrypter {
 
 	//TODO: loggning
 	
+	//TODO: life cycle
+	
 	@Requirement( hint = "devoteamSecDisp" )
     private SecDispatcher securityDispatcher;
 	
 	public Decrypter() {
-
+		System.out.println(this.getClass().getName());
 	}
 
 	/**

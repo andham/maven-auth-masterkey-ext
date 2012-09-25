@@ -44,6 +44,7 @@ public final class SecurityDispatcher implements SecDispatcher {
 	private SecretKey secretKey;
 	
 	public SecurityDispatcher() {
+		System.out.println(this.getClass().getName());
 	}
 
 	/**

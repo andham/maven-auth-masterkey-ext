@@ -33,9 +33,9 @@ public class DecrypterComponentTest extends PlexusTestCase {
 		super.setUp();		
 		InputStream is = null;
 		try {
-			is = DecrypterTest.class.getResourceAsStream("/test.settings.properties");
+			is = getClass().getResourceAsStream("/test.settings.properties");
 			if (is == null) {
-				is = DecrypterTest.class.getResourceAsStream("test.settings.properties");
+				is = getClass().getResourceAsStream("test.settings.properties");
 			}
 			Assert.assertNotNull(is);
 			settings.load(is);
