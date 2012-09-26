@@ -31,6 +31,7 @@ public class MavenExtSecretKey implements SecretKey {
 	//TODO: error handling
 	
 	private String key;
+	private String passPhrase;
 	
 	
 	public MavenExtSecretKey() {
@@ -41,6 +42,7 @@ public class MavenExtSecretKey implements SecretKey {
 			//TODO: get the secret key from a another place (card, cert???)
 			keyReader = new KeyReader();
 			key = keyReader.getKey();
+			passPhrase = keyReader.getPassPhrase();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,6 +59,11 @@ public class MavenExtSecretKey implements SecretKey {
 	 */
 	public String getKey() {
 		return key;
+	}
+
+
+	public String getPassPhrase() {
+		return passPhrase;
 	}
 
 

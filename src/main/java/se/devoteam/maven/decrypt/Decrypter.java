@@ -22,6 +22,7 @@ import org.apache.maven.settings.crypto.SettingsDecryptionRequest;
 import org.apache.maven.settings.crypto.SettingsDecryptionResult;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.logging.Logger;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
@@ -40,14 +41,17 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 @Component(role = SettingsDecrypter.class)
 public class Decrypter implements SettingsDecrypter {
 
-	//TODO: loggning
+	@Requirement(optional = true)
+    private Logger logger;
 	
 	
 	@Requirement( hint = "devoteamSecDisp" )
     private SecDispatcher securityDispatcher;
 	
 	public Decrypter() {
-		System.out.println(this.getClass().getName());
+		if (logger != null && logger.isDebugEnabled()) {
+			logger.debug(getClass().getName());
+		}
 	}
 
 	/**

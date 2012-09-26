@@ -31,4 +31,11 @@ public interface SecretKey extends Serializable {
 	 * @return an encrypted version of the secret key.
 	 */
 	public String getKey();
+	
+	/**
+	 * The pass phrase is used when encrypting/decrypting the secret key.
+	 * @return the pass phrase
+	 */
+	public String getPassPhrase();
+	
 }

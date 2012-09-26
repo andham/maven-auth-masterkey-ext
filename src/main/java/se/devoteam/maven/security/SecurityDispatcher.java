@@ -13,6 +13,7 @@ package se.devoteam.maven.security;
 
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.logging.Logger;
 import org.sonatype.plexus.components.cipher.PlexusCipher;
 import org.sonatype.plexus.components.cipher.PlexusCipherException;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
@@ -27,17 +28,14 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 @Component( role = SecDispatcher.class, hint = "devoteamSecDisp" )
 public final class SecurityDispatcher implements SecDispatcher {
 	
-	/**
-	 * Used when encrypting and decrypting the secret key.
-	 */
-	private static final String SYSTEM_PROPERTY_SEC_LOCATION = "settings.security";
 	
-	//TODO: add loggning
+	@Requirement(optional = true)
+    private Logger logger;
 	
 	@Requirement
 	protected PlexusCipher cipher;
 	
-	//TODO: how is this supposed to work - pair password with a specific decryptor
+	//TODO: how is this supposed to work? - pair password with a specific decryptor
 	//@Requirement
 	//protected Map decryptors;
 	
@@ -45,7 +43,9 @@ public final class SecurityDispatcher implements SecDispatcher {
 	private SecretKey secretKey;
 	
 	public SecurityDispatcher() {
-		System.out.println(this.getClass().getName());
+		if (logger != null && logger.isDebugEnabled()) {
+			logger.debug(this.getClass().getName());
+		}
 	}
 
 	/**
@@ -86,7 +86,7 @@ public final class SecurityDispatcher implements SecDispatcher {
   
         if(secretKey.isSet()) {
         	try {
-				return cipher.decryptDecorated(secretKey.getKey(), SYSTEM_PROPERTY_SEC_LOCATION);
+				return cipher.decryptDecorated(secretKey.getKey(), secretKey.getPassPhrase());
 			} catch (PlexusCipherException e) {
 				throw new SecDispatcherException(e);
 			}

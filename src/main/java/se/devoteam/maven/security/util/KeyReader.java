@@ -12,25 +12,20 @@ package se.devoteam.maven.security.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * Temporary class. Change to card, cert....??
  * @author Karin Karlsson
  */
 class KeyReader {
-	
-	private final String key;
+
+	private final Properties props = new Properties();
 
 	KeyReader() throws IOException {
 		InputStream is = null;
 		try {
-			is = this.getClass().getResourceAsStream("/key.txt");
-			StringBuilder builder = new StringBuilder();
-			int ch;
-			while ((ch = is.read()) > -1) {
-				builder.append((char)ch);
-			}
-			key = builder.toString();
+			props.load(this.getClass().getResourceAsStream("/key.properties"));
 		} finally {
 			if (is != null) {
 				is.close();
@@ -40,8 +35,11 @@ class KeyReader {
 	}
 	
 	String getKey() {
-		return key;
+		return props.getProperty("secretkey");
 	}
 	
+	String getPassPhrase() {
+		return props.getProperty("passPhrase");
+	}
 
 }
