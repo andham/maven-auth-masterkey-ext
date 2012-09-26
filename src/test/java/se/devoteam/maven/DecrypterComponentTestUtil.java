@@ -19,15 +19,21 @@ import org.apache.maven.settings.Proxy;
 import org.apache.maven.settings.Server;
 import org.apache.maven.settings.crypto.SettingsDecryptionRequest;
 
-public class DecrypterTestUtil {
+/**
+ * A helpers class to the #DecrypterComponentTest test case.
+ * 
+ * @author Karin Karlsson
+ *
+ */
+public class DecrypterComponentTestUtil {
 
-	private static final DecrypterTestUtil ME = new DecrypterTestUtil();
+	private static final DecrypterComponentTestUtil ME = new DecrypterComponentTestUtil();
 	
-	private DecrypterTestUtil() {
+	private DecrypterComponentTestUtil() {
 		//singleton
 	}
 	
-	public static synchronized DecrypterTestUtil getInstance() {
+	public static synchronized DecrypterComponentTestUtil getInstance() {
 		return ME;
 	}
 	

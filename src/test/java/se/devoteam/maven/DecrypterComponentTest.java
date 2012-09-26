@@ -18,8 +18,19 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import se.devoteam.maven.decrypt.Decrypter;
 import se.devoteam.maven.security.SecretKey;
 
+/**
+ * Tests the <code>Decrypter</code> component.
+ * 
+ * @author Karin
+ * @see  se.devoteam.maven.decrypt.Decrypter
+ *
+ */
 public class DecrypterComponentTest extends PlexusTestCase {
-
+	
+	/**
+	 * The properites are loaded from the 
+	 * <code>test.settings.properties</code> file.
+	 */
 	private static final Properties settings = new Properties();
 	
 	private SettingsDecrypter decrypter = null;
@@ -28,6 +39,10 @@ public class DecrypterComponentTest extends PlexusTestCase {
 		
 	}
 
+	/**
+	 * Loads the <code>test.settings.properties</code> and retrieves the decrypter instance
+	 * from the plexus container.
+	 */
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();		
@@ -53,10 +68,10 @@ public class DecrypterComponentTest extends PlexusTestCase {
 		
 		//make sure the components are exits in the container
 		Assert.assertNotNull(getContainer().getComponentDescriptor(SecDispatcher.class.getName(),"devoteamSecDisp"));
-		Assert.assertNotNull(getContainer().getComponentDescriptor(SettingsDecrypter.class.getName(), "devoteamDecrypt"));
-		Assert.assertNotNull(getContainer().getComponentDescriptor(SecretKey.class.getName(), "tmpKey"));
-		
-		decrypter = getContainer().lookup(SettingsDecrypter.class,"devoteamDecrypt");
+		Assert.assertNotNull(getContainer().getComponentDescriptor(SecretKey.class.getName(), "testKey"));
+		//SettingsDecrypter hint = default
+		Assert.assertNotNull(getContainer().getComponentDescriptorList(SettingsDecrypter.class.getName()));
+		decrypter = getContainer().lookup(SettingsDecrypter.class);
 		Assert.assertTrue(decrypter instanceof Decrypter);
 	}
 
@@ -65,7 +80,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	 * <p/>It sends in an empty request to the decrypt method and should get an empty result back.
 	 */
 	public void testDecryptEmptyRequest() {
-		SettingsDecryptionResult result = decrypter.decrypt(DecrypterTestUtil.getInstance().getEmptyRequest());
+		SettingsDecryptionResult result = decrypter.decrypt(DecrypterComponentTestUtil.getInstance().getEmptyRequest());
 		Assert.assertNotNull(result);
 		Assert.assertTrue(result.getServers().isEmpty());
 		Assert.assertTrue(result.getProxies().isEmpty());
@@ -74,12 +89,12 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	
 	/**
 	 * Test {@link se.devoteam.maven.decrypt.Decrypter#decrypt(SettingsDecryptionRequest)}.
-	 * <p/>The test provokes an error by trying to decrypt a password not encrypted with the master key
+	 * <p/>The test provokes an error by trying to decrypt a password not encrypted with the secret key
 	 * 
 	 * The test is successful if the result object has one problem attached to it.
 	 */
 	public void testDecryptPasswordProblem() {
-		SettingsDecryptionRequest req = DecrypterTestUtil.getInstance().getErrorPassword(settings);
+		SettingsDecryptionRequest req = DecrypterComponentTestUtil.getInstance().getErrorPassword(settings);
 		SettingsDecryptionResult result = decrypter.decrypt(req);
 		List<SettingsProblem> problems = result.getProblems();
 		Assert.assertTrue(problems.size() == 1);
@@ -92,7 +107,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	 * @see #getOneServerPasswordEncrypted()
 	 */
 	public void testDecryptPassword() {
-		SettingsDecryptionResult result = decrypter.decrypt(DecrypterTestUtil.getInstance().getOneServerPasswordEncrypted(settings));
+		SettingsDecryptionResult result = decrypter.decrypt(DecrypterComponentTestUtil.getInstance().getOneServerPasswordEncrypted(settings));
 		Assert.assertTrue(result.getProblems().isEmpty());
 		Assert.assertFalse(result.getServer().getPassword().startsWith(settings.getProperty("encryption.start")));
 		Assert.assertFalse(result.getServer().getPassword().endsWith(settings.getProperty("encryption.end")));
@@ -105,7 +120,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	 * The test is successful if the decrypter instance ignores the empty server object.
 	 */
 	public void testPasswordIsNull() {
-		SettingsDecryptionResult result = decrypter.decrypt(DecrypterTestUtil.getInstance().getServerPasswordNotSetRequest());
+		SettingsDecryptionResult result = decrypter.decrypt(DecrypterComponentTestUtil.getInstance().getServerPasswordNotSetRequest());
 		Assert.assertTrue(result.getProblems().isEmpty());
 		Assert.assertNull(result.getServer().getPassword());
 		

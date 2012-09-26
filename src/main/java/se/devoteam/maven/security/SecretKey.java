@@ -13,6 +13,8 @@ import java.io.Serializable;
 
 
 /**
+ * A secret key is a key that is needed when decrypting passwords 
+ * configured for servers and proxies. 
  * 
  * @author Karin Karlsson
  */
@@ -25,7 +27,8 @@ public interface SecretKey extends Serializable {
 	public boolean isSet();
 	
 	/**
-	 * @return an encrypted the secret key
+	 * 
+	 * @return an encrypted version of the secret key.
 	 */
 	public String getKey();
 }

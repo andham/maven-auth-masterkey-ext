@@ -22,23 +22,26 @@ import org.apache.maven.settings.crypto.SettingsDecryptionRequest;
 import org.apache.maven.settings.crypto.SettingsDecryptionResult;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.sonatype.plexus.components.cipher.PlexusCipherException;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
-import org.sonatype.plexus.components.sec.dispatcher.model.SettingsSecurity;
 
 /**
+ * This component accepts a decryption request, decrypts and returns a result object.
+ * This class overrides the default encryption/decryption implementation supplied by
+ * the maven distribution. 
+ * 
+ * <p/>This hint of this component is set to <code>default</code>, the same as the
+ * default implementation, to make maven replace the default component with this one.
  * 
  * @author Karin Karlsson
  * @see #decrypt(SettingsDecryptionRequest)
  *
  */
-@Component( role = SettingsDecrypter.class, hint = "devoteamDecrypt")
+@Component(role = SettingsDecrypter.class)
 public class Decrypter implements SettingsDecrypter {
 
 	//TODO: loggning
 	
-	//TODO: life cycle
 	
 	@Requirement( hint = "devoteamSecDisp" )
     private SecDispatcher securityDispatcher;
@@ -49,6 +52,7 @@ public class Decrypter implements SettingsDecrypter {
 
 	/**
 	 * Decrypt supplied passwords.
+	 * 
 	 * @param request the passwords to decrypt
 	 * @return all of the decrypted passwords as well as a list of encountered problems (if any)
 	 */

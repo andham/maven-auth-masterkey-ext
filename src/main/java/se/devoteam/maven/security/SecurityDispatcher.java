@@ -19,8 +19,9 @@ import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcherException;
 
 /**
+ * This component encrypts and decrypts configured passwords (passwords to configured servers and proxies).
  * 
- * @author Karin
+ * @author Karin Karlsson
  * @see #decrypt(String)
  */
 @Component( role = SecDispatcher.class, hint = "devoteamSecDisp" )
@@ -53,11 +54,7 @@ public final class SecurityDispatcher implements SecDispatcher {
 	public String decrypt(final String str) throws SecDispatcherException {
 		
 		if (cipher.isEncryptedString(str)) {
-			try {
-				return cipher.decrypt(undecorateString(str), decryptSecretKey());
-			} catch (PlexusCipherException e) {
-				throw new SecDispatcherException(e);
-			}
+			return decryptPassword(str, decryptSecretKey());
 		}
 
 		return null;
@@ -65,15 +62,16 @@ public final class SecurityDispatcher implements SecDispatcher {
 	
 	
 	/**
-	 * Removes the decorations from the string.
-	 * @param str the string
-	 * @return the string where the {@link PlexusCipher#ENCRYPTED_STRING_DECORATION_START} and
-	 * {@link PlexusCipher#ENCRYPTED_STRING_DECORATION_STOP} are removed 
-	 * @throws SecDispatcherException
+	 * Decryptes the password.
+	 * 
+	 * @param pwd the password
+	 * @param decryptedSecretKey the decrypted secret key
+	 * @return the decrypted password 
+	 * @throws SecDispatcherException unable to decrypt the password
 	 */
-	private String undecorateString(final String str) throws SecDispatcherException {
+	private String decryptPassword(final String pwd, final String decryptedSecretKey) throws SecDispatcherException {
 		try {
-			return cipher.unDecorate(str);
+			return cipher.decryptDecorated(pwd, decryptedSecretKey);
 		} catch (PlexusCipherException e) {
 			throw new SecDispatcherException(e);
 		}

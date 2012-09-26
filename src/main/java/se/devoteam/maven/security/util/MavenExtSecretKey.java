@@ -18,12 +18,12 @@ import se.devoteam.maven.security.SecretKey;
 
 
 /**
- * This class handles the master key that is used by maven when decrypting a server/proxy password.
+ * This component handles the secret key.
  * 
  * @author Karin Karlsson
  *
  */
-@Component(role = SecretKey.class, hint = "tmpKey") 
+@Component(role = SecretKey.class, hint = "testKey") 
 public class MavenExtSecretKey implements SecretKey {
 
 	private static final long serialVersionUID = 1L;
