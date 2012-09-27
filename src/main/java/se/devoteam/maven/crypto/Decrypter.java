@@ -1,5 +1,5 @@
 /*
- * se.devoteam.maven.Decrypter
+ * se.devoteam.maven.crypto.Decrypter
  * 
  * Version:  1.0 
  *
@@ -7,7 +7,7 @@
  * 
  * Copyright: 
  */
-package se.devoteam.maven.decrypt;
+package se.devoteam.maven.crypto;
 
 import java.util.ArrayList;
 import java.util.List;

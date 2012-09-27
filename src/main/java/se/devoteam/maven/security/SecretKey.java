@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 
 /**
- * A secret key is a key that is needed when decrypting passwords 
+ * A secret key is a key that is needed when encrypting/decrypting passwords 
  * configured for servers and proxies. 
  * 
  * @author Karin Karlsson

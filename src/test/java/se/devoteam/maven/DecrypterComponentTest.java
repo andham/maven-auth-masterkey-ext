@@ -15,14 +15,14 @@ import org.apache.maven.settings.crypto.SettingsDecryptionResult;
 import org.codehaus.plexus.PlexusTestCase;
 import org.sonatype.plexus.components.sec.dispatcher.SecDispatcher;
 
-import se.devoteam.maven.decrypt.Decrypter;
+import se.devoteam.maven.crypto.Decrypter;
 import se.devoteam.maven.security.SecretKey;
 
 /**
  * Tests the <code>Decrypter</code> component.
  * 
  * @author Karin
- * @see  se.devoteam.maven.decrypt.Decrypter
+ * @see  se.devoteam.maven.crypto.Decrypter
  *
  */
 public class DecrypterComponentTest extends PlexusTestCase {
@@ -76,7 +76,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	}
 
 	/**
-	 * Test {@link se.devoteam.maven.decrypt.Decrypter#decrypt(SettingsDecryptionRequest)}.
+	 * Test {@link se.devoteam.maven.crypto.Decrypter#decrypt(SettingsDecryptionRequest)}.
 	 * <p/>It sends in an empty request to the decrypt method and should get an empty result back.
 	 */
 	public void testDecryptEmptyRequest() {
@@ -88,7 +88,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	}
 	
 	/**
-	 * Test {@link se.devoteam.maven.decrypt.Decrypter#decrypt(SettingsDecryptionRequest)}.
+	 * Test {@link se.devoteam.maven.crypto.Decrypter#decrypt(SettingsDecryptionRequest)}.
 	 * <p/>The test provokes an error by trying to decrypt a password not encrypted with the secret key
 	 * 
 	 * The test is successful if the result object has one problem attached to it.
@@ -101,7 +101,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	}
 	
 	/**
-	 * Test {@link se.devoteam.maven.decrypt.Decrypter#decrypt(SettingsDecryptionRequest)}.
+	 * Test {@link se.devoteam.maven.crypto.Decrypter#decrypt(SettingsDecryptionRequest)}.
 	 * <p/>The test is successful if it can decrypt the password found in the <code>test.settings.properties</code> file.
 	 * 
 	 * @see #getOneServerPasswordEncrypted()
@@ -115,7 +115,7 @@ public class DecrypterComponentTest extends PlexusTestCase {
 	}
 	
 	/**
-	 * Test {@link se.devoteam.maven.decrypt.Decrypter#decrypt(SettingsDecryptionRequest)}.
+	 * Test {@link se.devoteam.maven.crypto.Decrypter#decrypt(SettingsDecryptionRequest)}.
 	 * <p/>This test sends in a server object where the server properties are not set.
 	 * The test is successful if the decrypter instance ignores the empty server object.
 	 */
