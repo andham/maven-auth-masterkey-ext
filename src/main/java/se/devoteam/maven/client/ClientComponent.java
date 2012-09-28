@@ -1,5 +1,7 @@
 package se.devoteam.maven.client;
 
+import org.apache.commons.cli.ParseException;
+
 /**
  * 
  * 
@@ -7,5 +9,7 @@ package se.devoteam.maven.client;
  *
  */
 public interface ClientComponent {
+	
+	public Result executeCmd() throws ParseException, ClientException;
 
 }

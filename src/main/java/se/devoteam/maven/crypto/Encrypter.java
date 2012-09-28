@@ -17,17 +17,6 @@ package se.devoteam.maven.crypto;
 public interface Encrypter {
 	
 	/**
-	 * TODO: remove this
-	 * Encrytps a string.
-	 * 
-	 * @param str the string to encrypt
-	 * @param phrase used when encrypting/decrypting the string
-	 * @return the encrypted string
-	 * @throws EncryptException unable to encrypt the string
-	 */
-	public String encryptAndDecorate(String str, String phrase) throws EncryptException;
-	
-	/**
 	 * Encrytps a string.
 	 * 
 	 * @param str the string to encrypt

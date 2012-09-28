@@ -9,8 +9,12 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.Parser;
+import org.codehaus.plexus.DefaultPlexusContainer;
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
 @Component(role = ClientComponent.class)
 public class Client implements ClientComponent {
@@ -64,27 +68,32 @@ public class Client implements ClientComponent {
 		}
 	}
 	
-	//TODO: create a plexus container and test
 
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		Client client = new Client(args);
+		
 		try {
+			PlexusContainer container = new DefaultPlexusContainer();
+			ClientComponent client = container.lookup(ClientComponent.class);
 			Result result = client.executeCmd();
 			System.out.println(result.getValue());
-			System.exit(1);
-		} catch (ParseException e) {
+			System.exit(0);
+		} catch (PlexusContainerException e1) {
+			e1.printStackTrace();
+			System.exit(-1);
+		} catch (ComponentLookupException e) {
 			e.printStackTrace();
 			System.exit(-1);
-		} catch (UnsupportedOperationException e) {
+		} catch (ParseException e) {
 			e.printStackTrace();
 			System.exit(-1);
 		} catch (ClientException e) {
 			e.printStackTrace();
 			System.exit(-1);
 		}
+
 
 	}
 
