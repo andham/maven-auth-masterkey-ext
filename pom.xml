@@ -69,6 +69,19 @@
           		</execution>
         	</executions>  		
   		</plugin>
+  		<plugin>
+	        <groupId>org.codehaus.mojo</groupId>
+	        <artifactId>appassembler-maven-plugin</artifactId>
+	        <version>1.3</version>
+	        <configuration>
+	          <programs>
+	            <program>
+	              <mainClass>se.devoteam.maven.client.Client</mainClass>
+	              <name>mvnext</name>
+	            </program>
+	          </programs>
+	        </configuration>
+      </plugin>
   	</plugins>
   </build>
   

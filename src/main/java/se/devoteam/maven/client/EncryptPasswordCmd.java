@@ -15,7 +15,7 @@ public class EncryptPasswordCmd implements ClientCmd {
 	private Encrypter enc;
 
 	public String getName() {
-		return "ep";
+		return "extep";
 	}
 
 	public String getLongName() {

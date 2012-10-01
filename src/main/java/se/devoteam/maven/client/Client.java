@@ -1,5 +1,6 @@
 package se.devoteam.maven.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
@@ -29,6 +30,11 @@ public class Client implements ClientComponent {
 
 	private Client(final String [] args) {
 		argsList = args;
+		//TODO fix this - let plexus load this
+		if (commands == null) {
+			commands = new ArrayList<ClientCmd>();
+			commands.add(new EncryptPasswordCmd());
+		}
 		createOptions();
 	}
 	
